@@ -3,11 +3,7 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Validation Form', success: false, errors: req.session.errors});
-  req.session.errors = null;
+  res.render('index', { title: 'Cool, huh', condition: true, anyArr: [1,2,3]});
 });
-router.post('/submit',function(req, res, next){
-
-})
 
 module.exports = router;

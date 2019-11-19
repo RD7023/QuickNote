@@ -1,5 +1,6 @@
 var express = require('express');
 const db = require('./queries')
+
 var router = express.Router();
 
 /* GET home page. */
@@ -8,6 +9,7 @@ router.get('/', function(req, res, next) {
   req.session.errors=null;
   req.session.success=null;
 });
+
 router.post('/submit',function(req,res,next){
   //Check validity
   req.check('email','Invalid email address').isEmail();

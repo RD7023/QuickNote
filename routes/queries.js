@@ -1,4 +1,6 @@
 const Pool = require('pg').Pool
+var passwordHash = require('../node_modules/password-hash');
+
 const pool = new Pool({
   user: 'me',
   host: 'localhost',
@@ -9,8 +11,7 @@ const pool = new Pool({
 
 const createUser = (request, response) => {
   const { nickname,password,email } = request.body
-
-  pool.query('INSERT INTO users (nickname,password,email) VALUES ($1, $2, $3)', [nickname, password ,email], (error, results) => {
+  pool.query('INSERT INTO users (nickname,password,email) VALUES ($1, $2, $3)', [nickname, passwordHash.generate(password) ,email], (error, results) => {
     if (error) {
       throw error;
     }

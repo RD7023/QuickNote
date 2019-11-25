@@ -1,8 +1,10 @@
-<h1>{{title}}</h1>
 {{# if success}}
-
-    <h1>Successful Validation</h1>
-
+    <h1>Home page</h1>
+    <p>Email: {{email}}</p>
+    <p>Username: {{username}}</p>
+    <form class="" action="/logout" method="post">
+      <button type="submit" name="button">Log Out</button>
+    </form>
 {{ else }}
     {{# if errors}}
     <section>
@@ -13,23 +15,37 @@
       </ul>
     </section>
     {{/if}}
-      <form action="/submit" method="post">
+      <h1>Sign Up</h1>
+      <form action="/submitSignUp" method="post">
         <div class="input">
           <label for="nickname">Nickname</label>
           <input type="text" name="nickname" id="nickname">
         </div>
         <div class="input">
-          <label for="email">E-Mail</label>
-          <input type="text" name="email" id="email">
+          <label for="emailSignUp">E-Mail</label>
+          <input type="text" name="emailSignUp" id="emailSignUp">
         </div>
         <div class="input">
-          <label for="password">Password</label>
-          <input type="password" name="password" id="password">
+          <label for="passwordSignUp">Password</label>
+          <input type="password" name="passwordSignUp" id="passwordSignUp">
         </div>
         <div class="input">
-          <label for="confirmPassword">Confirm Password</label>
-          <input type="password" name="confirmPassword" id="confirmPassword">
+          <label for="confirmPasswordSignUp">Confirm Password</label>
+          <input type="password" name="confirmPasswordSignUp" id="confirmPasswordSignUp">
         </div>
         <button type="submit" name="button">Sign Up</button>
+      </form>
+      <!-- To hide when press login -->
+      <h1>Login</h1>
+      <form action="/submitLogin" method="post">
+        <div class="input">
+          <label for="emailLogin">E-Mail</label>
+          <input type="text" name="emailLogin" id="emailLogin">
+        </div>
+        <div class="input">
+          <label for="passwordLogin">Password</label>
+          <input type="password" name="passwordLogin" id="passwordLogin">
+        </div>
+        <button type="submit" name="button">Login</button>
       </form>
 {{/if}}

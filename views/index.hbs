@@ -1,10 +1,24 @@
 {{# if success}}
-    <h1>Home page</h1>
-    <p>Email: {{email}}</p>
-    <p>Username: {{username}}</p>
     <form class="" action="/logout" method="post">
       <button type="submit" name="button">Log Out</button>
     </form>
+    <h1>Home page</h1>
+    <h2>Email: {{email}}</h2>
+    <h2>Username: {{username}}</h2>
+    <form class="" action="/createSubject" method="post">
+      <button type="submit" name="createSubject">Create subject</button>
+      <input type="text" name="inputSubject" placeholder="Subject name" id="inputSubject">
+    </form>
+    {{#if subjects}}
+    <h2>Subjects:</h2>
+    <section>
+      <ul>
+          {{# each subjects}}
+            <li>{{this}}</li>
+          {{/each}}
+      </ul>
+    </section>
+    {{/if}}
 {{ else }}
     {{# if errors}}
     <section>

@@ -71,7 +71,41 @@ const validateUserByLoginEndPassword = (request,response) => {
   })
 }
 
+const createSubject =(request,response) =>{
+  const { username } = request.session;
+  const { inputSubject } =request.body;
+  pool.query('INSERT INTO notes(author,lesson) VALUES($1,$2)',[username,inputSubject],function (error,results) {
+    if (error) {
+
+    }
+    else {
+      response.redirect('/');
+    }
+  })
+
+}
+
+const getUserSubject = (request,response) => {
+  var subjArr=[]
+  const { username } = request.session;
+  pool.query('SELECT DISTINCT lesson FROM notes WHERE author=$1',[username],function (error,results) {
+    if (error) {
+
+    }
+    else {
+      for (var i = 0; i < results.rows.length; i++) {
+        subjArr.push(results.rows[i].lesson)
+      }
+      response.render('index', { title: 'Form Validation', success: request.session.success, errors:request.session.errors, username:request.session.username, email:request.session.userEmail, subjects:subjArr});
+    }
+  })
+}
+
 module.exports = {
   createUser,
-  validateUserByLoginEndPassword
+  validateUserByLoginEndPassword,
+
+  getUserSubject,
+  createSubject
+
 }

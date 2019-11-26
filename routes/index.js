@@ -5,7 +5,7 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Form Validation', success: req.session.success, errors:req.session.errors, username:req.session.username, email:req.session.userEmail});
+  db.getUserSubject(req,res);
   req.session.errors=null;
 });
 
@@ -48,4 +48,9 @@ router.post('/logout',function (req,res,next) {
   req.session.userEmail=null;
   res.redirect('/')
 })
+
+router.post('/createSubject',function (req,res,next) {
+  db.createSubject(req,res);
+})
+
 module.exports = router;

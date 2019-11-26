@@ -9,8 +9,8 @@ const pool = new Pool({
   port: 5432,
 })
 
-const createUser = (request, response) => {
-  const { nickname,passwordSignUp,emailSignUp } = request.body;
+const createUser = (req, res) => {
+  const { nickname,passwordSignUp,emailSignUp } = req.body;
   pool.query('SELECT * FROM users WHERE nickname=$1 OR email=$2',[nickname,emailSignUp],(error,results) => {
 
     if (!results.rows[0]) {
@@ -19,25 +19,25 @@ const createUser = (request, response) => {
           throw error2;
         }
         else {
-          request.session.success =true;
-          request.session.username=nickname;
-          request.session.userEmail=emailSignUp;
-          response.redirect('/');
+          req.session.success =true;
+          req.session.username=nickname;
+          req.session.userEmail=emailSignUp;
+          res.redirect('/');
         }
       })
     }
     else{
-      request.session.success = false;
+      req.session.success = false;
       var errors = [{msg:'There already exist user with such email or nickname'}]
-      request.session.errors = errors;
-      response.redirect('/');
+      req.session.errors = errors;
+      res.redirect('/');
     }
   })
 
 
 }
-const validateUserByLoginEndPassword = (request,response) => {
-  const {passwordLogin,emailLogin} = request.body;
+const validateUserByLoginEndPassword = (req,res) => {
+  const {passwordLogin,emailLogin} = req.body;
 
   pool.query('SELECT * FROM users WHERE email=$1',[emailLogin],(error,results) => {
     if (error) {
@@ -46,24 +46,24 @@ const validateUserByLoginEndPassword = (request,response) => {
     else {
       if (results.rows[0]) {
         if (passwordHash.verify(passwordLogin,results.rows[0].password)) {
-          request.session.success =true;
-          request.session.username=results.rows[0].nickname;
-          request.session.userEmail=results.rows[0].email;
-          response.redirect('/');
+          req.session.success =true;
+          req.session.username=results.rows[0].nickname;
+          req.session.userEmail=results.rows[0].email;
+          res.redirect('/');
         }
         else {
-          request.session.success =false;
+          req.session.success =false;
           var errors = [{msg:'Incorrect password'}]
-          request.session.errors = errors;
-          console.log(request.session.errors[0].msg);
-          response.redirect('/');
+          req.session.errors = errors;
+          console.log(req.session.errors[0].msg);
+          res.redirect('/');
         }
       }
       else {
-        request.session.success =false;
+        req.session.success =false;
         var errors = [{msg:'There is no user with email: ' + emailLogin}]
-        request.session.errors = errors;
-        response.redirect('/');
+        req.session.errors = errors;
+        res.redirect('/');
       }
     }
 
@@ -71,23 +71,23 @@ const validateUserByLoginEndPassword = (request,response) => {
   })
 }
 
-const createSubject =(request,response) =>{
-  const { username } = request.session;
-  const { inputSubject } =request.body;
+const createUserSubject =(req,res) =>{
+  const { username } = req.session;
+  const { inputSubject } =req.body;
   pool.query('INSERT INTO notes(author,lesson) VALUES($1,$2)',[username,inputSubject],function (error,results) {
     if (error) {
 
     }
     else {
-      response.redirect('/');
+      res.redirect('/');
     }
   })
 
 }
 
-const getUserSubject = (request,response) => {
+const getUserSubjects = (req,res) => {
   var subjArr=[]
-  const { username } = request.session;
+  const { username } = req.session;
   pool.query('SELECT DISTINCT lesson FROM notes WHERE author=$1',[username],function (error,results) {
     if (error) {
 
@@ -96,7 +96,27 @@ const getUserSubject = (request,response) => {
       for (var i = 0; i < results.rows.length; i++) {
         subjArr.push(results.rows[i].lesson)
       }
-      response.render('index', { title: 'Form Validation', success: request.session.success, errors:request.session.errors, username:request.session.username, email:request.session.userEmail, subjects:subjArr});
+      res.render('index', { title: 'Form Validation', success: req.session.success, errors:req.session.errors, username:req.session.username, email:req.session.userEmail, subjects:subjArr});
+    }
+  })
+}
+
+const getUserSubjectNotes = (req,res) => {
+  var notesArr=[]
+  const { username } = req.session;
+  const subject = req.params.subjId;
+  pool.query('SELECT DISTINCT title FROM notes WHERE author=$1 AND lesson=$2 AND title IS NOT NULL',[username,subject],function (error,results) {
+    if (error) {
+
+    }
+    else {
+      for (var i = 0; i < results.rows.length; i++) {
+        notesArr.push(results.rows[i].title)
+      }
+      res.render('subjNotes', {title: subject,
+      notes:notesArr,
+      errors:req.session.errors,
+      });
     }
   })
 }
@@ -105,7 +125,8 @@ module.exports = {
   createUser,
   validateUserByLoginEndPassword,
 
-  getUserSubject,
-  createSubject
+  getUserSubjects,
+  createUserSubject,
 
+  getUserSubjectNotes
 }

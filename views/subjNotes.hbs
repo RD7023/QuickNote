@@ -1,0 +1,12 @@
+<h1>{{title}}</h1>
+
+{{#if notes}}
+<h2>Notes:</h2>
+<section>
+  <ul>
+      {{# each notes}}
+        <li>{{this}}</li>
+      {{/each}}
+  </ul>
+</section>
+{{/if}}

@@ -3,12 +3,13 @@ const db = require('./queries')
 
 var router = express.Router();
 
-/* GET home page. */
+/* GET home or auth page. */
 router.get('/', function(req, res, next) {
-  db.getUserSubject(req,res);
+  db.getUserSubjects(req,res);
   req.session.errors=null;
 });
 
+/* POST on home or auth page. */
 router.post('/submitSignUp',function(req,res,next){
   //Check validity
   req.check('emailSignUp','Invalid email address').isEmail();
@@ -50,7 +51,18 @@ router.post('/logout',function (req,res,next) {
 })
 
 router.post('/createSubject',function (req,res,next) {
-  db.createSubject(req,res);
+  db.createUserSubject(req,res);
 })
+
+/* GET subjects notes page. */
+router.get('/:subjId', function(req, res, next) {
+  if (!req.session.success) {
+    res.redirect('/');
+  } else {
+    db.getUserSubjectNotes(req,res);
+  }
+});
+
+
 
 module.exports = router;

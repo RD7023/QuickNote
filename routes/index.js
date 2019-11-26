@@ -18,6 +18,7 @@ router.post('/submitSignUp',function(req,res,next){
   if (errors) {
     req.session.errors = errors;
     req.session.success = false;
+    res.redirect('/');
   }
   else {
     db.createUser(req, res);

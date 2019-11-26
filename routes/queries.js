@@ -84,7 +84,6 @@ const createUserSubject =(req,res) =>{
   })
 
 }
-
 const getUserSubjects = (req,res) => {
   var subjArr=[]
   const { username } = req.session;
@@ -113,13 +112,27 @@ const getUserSubjectNotes = (req,res) => {
       for (var i = 0; i < results.rows.length; i++) {
         notesArr.push(results.rows[i].title)
       }
-      res.render('subjNotes', {title: subject,
+      res.render('subjectNotes', {title: subject,
       notes:notesArr,
       errors:req.session.errors,
       });
     }
   })
 }
+const createUserSubjectNotes = (req,res) => {
+  const { username } = req.session;
+  const subject  = req.params.subjId
+  const { inputNoteTitle } = req.body;
+
+  pool.query('INSERT INTO notes(author,lesson,title) VALUES($1,$2,$3)',[username,subject,inputNoteTitle],function (error,results) {
+    if (error) {
+
+    } else {
+      res.redirect('/'+subject);
+    }
+  })
+}
+
 
 module.exports = {
   createUser,
@@ -128,5 +141,6 @@ module.exports = {
   getUserSubjects,
   createUserSubject,
 
-  getUserSubjectNotes
+  getUserSubjectNotes,
+  createUserSubjectNotes
 }

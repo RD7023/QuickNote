@@ -1,0 +1,17 @@
+<h1>{{title}}</h1>
+
+<form class="" action="{{title}}/createNote" method="post">
+  <button type="submit" name="createNote">Create note</button>
+  <input type="text" name="inputNoteTitle" placeholder="Note title" id="inputNoteTitle">
+</form>
+
+{{#if notes}}
+<h2>Notes:</h2>
+<section>
+  <ul>
+      {{# each notes}}
+        <li>{{this}}</li>
+      {{/each}}
+  </ul>
+</section>
+{{/if}}

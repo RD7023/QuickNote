@@ -55,7 +55,7 @@ router.post('/createSubject',function (req,res,next) {
 })
 
 /* GET subjects notes page. */
-router.get('/:subjId', function(req, res, next) {
+router.get('/:subjId', function (req, res, next) {
   if (!req.session.success) {
     res.redirect('/');
   } else {
@@ -63,6 +63,8 @@ router.get('/:subjId', function(req, res, next) {
   }
 });
 
-
+router.post('/:subjId/createNote',function (req,res,next) {
+  db.createUserSubjectNotes(req,res);
+})
 
 module.exports = router;

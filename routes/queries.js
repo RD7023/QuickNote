@@ -1,5 +1,5 @@
 const Pool = require('pg').Pool;
-const multer = require('multer');
+
 var passwordHash = require('../node_modules/password-hash');
 
 const pool = new Pool({
@@ -9,6 +9,9 @@ const pool = new Pool({
   password: 'password',
   port: 5432,
 })
+
+
+
 
 const createUser = (req, res) => {
   const { nickname,passwordSignUp,emailSignUp } = req.body;
@@ -122,7 +125,7 @@ const getUserSubjectNotes = (req,res) => {
 }
 const createUserSubjectNotes = (req,res) => {
   const { username } = req.session;
-  const subject  = req.params.subjId
+  const subject  = req.params.subjId;
   const { inputNoteTitle } = req.body;
 
   pool.query('INSERT INTO notes(author,lesson,title) VALUES($1,$2,$3)',[username,subject,inputNoteTitle],function (error,results) {
@@ -144,11 +147,14 @@ const getUserNote = (req,res) => {
     if (error) {
 
     } else {
+      console.log(results.rows);
+      console.log(results.rows[0].text);
+      console.log(results.rows[0].photo);
       text=results.rows[0].text;
       photo=results.rows[0].photo;
       res.render('note', {title: title,
       text:text,
-      photo:photo,
+      photo:`/uploads/${photo}`,
       subject:subject,
       errors:req.session.errors
       });
@@ -160,10 +166,16 @@ const uploadPhoto = (req,res) => {
   const { username } = req.session;
   const subject = req.params.subjId;
   const title = req.params.noteId;
-  const photo = req.body.pic;
-  console.log(photo);
-
+  const photo = req.file.filename;
+  pool.query('UPDATE notes SET photo=$1 WHERE title=$2 AND lesson=$3 AND author=$4',[photo,title,subject,username],function (error,results) {
+    if (error) {
+      console.log(23);
+    } else {
+      res.redirect('/'+subject+'/'+title);
+    }
+  })
 }
+
 module.exports = {
   createUser,
   validateUserByLoginEndPassword,

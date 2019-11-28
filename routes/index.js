@@ -1,5 +1,35 @@
 var express = require('express');
+var path = require('path');
 const db = require('./queries')
+const multer = require('multer');
+
+
+/* SET WHERE IMAGES ARE STORED */
+const storage = multer.diskStorage({
+  destination:'./public/uploads/',
+  filename: function (req,file,cb) {
+    cb(null,file.fieldname + '-' + Date.now() + path.extname(file.originalname))
+  }
+})
+const upload = multer({
+  storage: storage,
+  limits:{filesize:5000000},
+  fileFilter: function (req,file,cb) {
+    checkFileType(file,cb)
+  }
+}).single('myImage')
+function checkFileType(file,cb) {
+  //Allow extensions
+  const filetypes = /jpeg|jpg|png/;
+  const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+  const mimetype = filetypes.test(file.mimetype);
+  if (mimetype && extname) {
+    return cb(null,true);
+  }
+  else {
+    cb('Error: Images Only!')
+  }
+}
 
 var router = express.Router();
 
@@ -65,8 +95,21 @@ router.get('/:subjId/:noteId', function (req, res, next) {
   }
 });
 
-router.post('/:subjId/:noteId/uploadPhoto',function (req, res, next) {
-  db.uploadPhoto(req, res);
+router.post('/:subjId/:noteId/upload',(req, res) =>{
+  upload(req,res, (err) => {
+    if (err) {
+
+    }
+    else {
+      if (req.file == undefined) {
+
+      }
+      else {
+        db.uploadPhoto(req,res);
+
+      }
+    }
+  })
 })
 
 

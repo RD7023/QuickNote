@@ -147,17 +147,25 @@ const getUserNote = (req,res) => {
     if (error) {
 
     } else {
-      console.log(results.rows);
-      console.log(results.rows[0].text);
-      console.log(results.rows[0].photo);
-      text=results.rows[0].text;
-      photo=results.rows[0].photo;
-      res.render('note', {title: title,
-      text:text,
-      photo:`/uploads/${photo}`,
-      subject:subject,
-      errors:req.session.errors
-      });
+
+      if (results.rows[0].text||results.rows[0].photo) {
+        text=results.rows[0].text;
+        photo=results.rows[0].photo;
+        res.render('note', {title: title,
+        text:text,
+        photo:`/uploads/${photo}`,
+        subject:subject,
+        errors:req.session.errors
+        });
+      }
+      else {
+        res.render('note', {title: title,
+        subject:subject,
+        text:' ',
+        errors:req.session.errors
+        });
+      }
+
     }
   })
 }

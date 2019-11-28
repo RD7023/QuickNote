@@ -1,0 +1,31 @@
+<div class="container">
+  <form action="/uploadPhoto">
+    <div class="file-field input-field">
+      <div class="btn">
+        <span>File</span>
+        <input type="file">
+      </div>
+      <div class="file-path-wrapper">
+        <input class="file-path validate" type="text">
+      </div>
+    </div>
+    <button type="submit" class='btn'>Submit</button>
+  </form>
+</div>
+<div class="container">
+  <h1>{{title}}</h1>
+  {{#if text}}
+  <div class="row">
+    <form class="col s12">
+      <div class="row">
+        <div class="input-field col s12">
+          <textarea id="textarea1" class="materialize-textarea"></textarea>
+        </div>
+      </div>
+    </form>
+    </div>
+  {{/if}}
+
+  {{#if photo}}
+  {{/if}}
+</div>

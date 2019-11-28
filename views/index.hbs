@@ -1,20 +1,23 @@
+
+<div class="container">
+
 {{# if success}}
     <form class="" action="/logout" method="post">
-      <button type="submit" name="button">Log Out</button>
+      <button type="submit" name="button" class="btn">Log Out</button>
     </form>
     <h1>Home page</h1>
-    <h2>Email: {{email}}</h2>
-    <h2>Username: {{username}}</h2>
+    <p>Email: {{email}}</p>
+    <p>Username: {{username}}</p>
     <form class="" action="/createSubject" method="post">
-      <button type="submit" name="createSubject">Create subject</button>
+      <button type="submit" name="createSubject" class="btn">Create subject</button>
       <input type="text" name="inputSubject" placeholder="Subject name" id="inputSubject">
     </form>
     {{#if subjects}}
     <h2>Subjects:</h2>
     <section>
-      <ul>
+      <ul class="collection with-header">
           {{# each subjects}}
-            <li>{{this}}</li>
+            <li onclick="location.href = window.location.href +'{{this}}';" class="collection-item">{{this}}</li>
           {{/each}}
       </ul>
     </section>
@@ -47,7 +50,7 @@
           <label for="confirmPasswordSignUp">Confirm Password</label>
           <input type="password" name="confirmPasswordSignUp" id="confirmPasswordSignUp">
         </div>
-        <button type="submit" name="button">Sign Up</button>
+        <button type="submit" name="button" class="btn">Sign Up</button>
       </form>
       <!-- To hide when press login -->
       <h1>Login</h1>
@@ -60,6 +63,7 @@
           <label for="passwordLogin">Password</label>
           <input type="password" name="passwordLogin" id="passwordLogin">
         </div>
-        <button type="submit" name="button">Login</button>
+        <button type="submit" name="button" class="btn">Login</button>
       </form>
 {{/if}}
+</div>

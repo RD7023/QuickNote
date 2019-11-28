@@ -54,6 +54,24 @@ router.post('/createSubject',function (req,res,next) {
   db.createUserSubject(req,res);
 })
 
+
+
+/* GET selected note page. */
+router.get('/:subjId/:noteId', function (req, res, next) {
+  if (!req.session.success) {
+    res.redirect('/');
+  } else {
+    db.getUserNote(req,res);
+  }
+});
+
+router.post('/:subjId/:noteId/uploadPhoto',function (req, res, next) {
+  db.uploadPhoto(req, res);
+})
+
+
+
+
 /* GET subjects notes page. */
 router.get('/:subjId', function (req, res, next) {
   if (!req.session.success) {
@@ -66,5 +84,8 @@ router.get('/:subjId', function (req, res, next) {
 router.post('/:subjId/createNote',function (req,res,next) {
   db.createUserSubjectNotes(req,res);
 })
+
+
+
 
 module.exports = router;

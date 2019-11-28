@@ -1,4 +1,5 @@
-const Pool = require('pg').Pool
+const Pool = require('pg').Pool;
+const multer = require('multer');
 var passwordHash = require('../node_modules/password-hash');
 
 const pool = new Pool({
@@ -133,7 +134,36 @@ const createUserSubjectNotes = (req,res) => {
   })
 }
 
+const getUserNote = (req,res) => {
+  const { username } = req.session;
+  const subject = req.params.subjId;
+  const title = req.params.noteId;
 
+  pool.query('SELECT text,photo FROM notes WHERE author=$1 AND lesson=$2 AND title=$3 ',[username,subject,title],function (error,results) {
+
+    if (error) {
+
+    } else {
+      text=results.rows[0].text;
+      photo=results.rows[0].photo;
+      res.render('note', {title: title,
+      text:text,
+      photo:photo,
+      subject:subject,
+      errors:req.session.errors
+      });
+    }
+  })
+}
+
+const uploadPhoto = (req,res) => {
+  const { username } = req.session;
+  const subject = req.params.subjId;
+  const title = req.params.noteId;
+  const photo = req.body.pic;
+  console.log(photo);
+
+}
 module.exports = {
   createUser,
   validateUserByLoginEndPassword,
@@ -142,5 +172,8 @@ module.exports = {
   createUserSubject,
 
   getUserSubjectNotes,
-  createUserSubjectNotes
+  createUserSubjectNotes,
+
+  getUserNote,
+  uploadPhoto
 }

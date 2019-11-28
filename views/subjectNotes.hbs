@@ -1,17 +1,22 @@
+
+<div class="container">
+
+
 <h1>{{title}}</h1>
 
 <form class="" action="{{title}}/createNote" method="post">
-  <button type="submit" name="createNote">Create note</button>
+  <button type="submit" name="createNote" class="btn">Create note</button>
   <input type="text" name="inputNoteTitle" placeholder="Note title" id="inputNoteTitle">
 </form>
 
 {{#if notes}}
-<h2>Notes:</h2>
 <section>
-  <ul>
+  <ul class="collection with-header">
+      <li class="collection-header"><h4>Notes</h4></li>
       {{# each notes}}
-        <li>{{this}}</li>
+        <li onclick="location.href = window.location.href + '{{title}}'+'/' +'{{this}}';"  class="collection-item">{{this}}</li>
       {{/each}}
   </ul>
 </section>
 {{/if}}
+</div>

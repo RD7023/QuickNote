@@ -147,23 +147,37 @@ const getUserNote = (req,res) => {
     if (error) {
       console.log(error);
     } else {
-
-      if (results.rows[0].text||results.rows[0].photo) {
-        text=results.rows[0].text;
-        photo=results.rows[0].photo;
-        res.render('note', {title: title,
-        text:text,
-        photo:`/uploads/${photo}`,
-        subject:subject,
-        errors:req.session.errors
-        });
+      if (results.rows[0]) {
+        if (results.rows[0].photo||results.rows[0].text) {
+          console.log(results.rows[0]);
+          text=results.rows[0].text;
+          photo=results.rows[0].photo;
+          if (photo) {
+            photo=`/uploads/${photo}`;
+          }
+          res.render('note', {title: title,
+          text:text,
+          photo:photo,
+          subject:subject,
+          errors:req.session.errors
+          });
+        }
+        else {
+          res.render('note', {title: title,
+          subject:subject,
+          text:' ',
+          errors:req.session.errors
+          });
+        }
       }
       else {
-        res.render('note', {title: title,
-        subject:subject,
-        text:' ',
-        errors:req.session.errors
-        });
+
+          res.render('note', {title: title,
+          subject:subject,
+          text:' ',
+          errors:req.session.errors
+          });
+
       }
 
     }
@@ -177,12 +191,27 @@ const uploadPhoto = (req,res) => {
   const photo = req.file.filename;
   pool.query('UPDATE notes SET photo=$1 WHERE title=$2 AND lesson=$3 AND author=$4',[photo,title,subject,username],function (error,results) {
     if (error) {
-      console.log(23);
+      console.log(error);
     } else {
       res.redirect('/'+subject+'/'+title);
     }
   })
 }
+
+const saveNote = (req,res) => {
+  const { username } = req.session;
+  const subject = req.params.subjId;
+  const title = req.params.noteId;
+  const text = req.body.text;
+  pool.query('UPDATE notes SET text=$1 WHERE title=$2 AND lesson=$3 AND author=$4',[text,title,subject,username],function (error,results) {
+    if (error) {
+      console.log(error);
+    } else {
+      res.redirect('/'+subject+'/'+title);
+    }
+  })
+}
+
 
 module.exports = {
   createUser,
@@ -195,5 +224,6 @@ module.exports = {
   createUserSubjectNotes,
 
   getUserNote,
-  uploadPhoto
+  uploadPhoto,
+  saveNote
 }

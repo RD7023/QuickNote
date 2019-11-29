@@ -17,12 +17,12 @@
   <h1>{{title}}</h1>
   {{#if text}}
   <div class="row">
-    <form class="col s12">
+    <form action="/{{subject}}/{{title}}/save" method="post"  class="col s12">
+      <button type="submit" name="button" class="btn">Save</button>
       <div class="row">
         <div class="input-field col s12">
-          <textarea id="textarea1" class="materialize-textarea"></textarea>
+          <textarea id="textarea1" class="materialize-textarea" name="text">{{text}}</textarea>
         </div>
-        <button type="button" name="button" class="btn">Save</button>
       </div>
     </form>
     </div>

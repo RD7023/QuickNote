@@ -95,7 +95,7 @@ router.get('/:subjId/:noteId', function (req, res, next) {
   }
 });
 
-router.post('/:subjId/:noteId/upload',(req, res) =>{
+router.post('/:subjId/:noteId/upload',(req, res, next) =>{
   upload(req,res, (err) => {
     if (err) {
 
@@ -112,6 +112,9 @@ router.post('/:subjId/:noteId/upload',(req, res) =>{
   })
 })
 
+router.post('/:subjId/:noteId/save',(req, res, next) => {
+  db.saveNote(req,res);
+})
 
 
 

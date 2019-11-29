@@ -212,6 +212,20 @@ const saveNote = (req,res) => {
   })
 }
 
+const saveTextFromPhoto = (req,res,data) => {
+  const { username } = req.session;
+  const subject = req.params.subjId;
+  const title = req.params.noteId;
+
+  pool.query('UPDATE notes SET text=$1 WHERE title=$2 AND lesson=$3 AND author=$4',[data,title,subject,username],function (error,results) {
+    if (error) {
+      console.log(error);
+    } else {
+      res.redirect('/'+subject+'/'+title);
+    }
+  })
+
+}
 
 module.exports = {
   createUser,
@@ -225,5 +239,6 @@ module.exports = {
 
   getUserNote,
   uploadPhoto,
-  saveNote
+  saveNote,
+  saveTextFromPhoto
 }

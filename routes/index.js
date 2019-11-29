@@ -116,6 +116,22 @@ router.post('/:subjId/:noteId/save',(req, res, next) => {
   db.saveNote(req,res);
 })
 
+router.post('/:subjId/:noteId/getTextFromPhoto',(req, res, next) => {
+  var photo = req.body.getTextFromPhoto;
+
+  photo = photo.replace('/',"\\");
+  photo = photo.replace('/',"\\");
+  photo = photo.replace('/',"\\");
+
+
+  const { spawn } = require('child_process');
+  const pyProg = spawn('python', ['public/tesserocr-master/scratch.py',photo]);
+  pyProg.stdout.on('data', function(data) {
+        console.log(data.toString());
+        db.saveTextFromPhoto(req,res,data.toString());
+    });
+})
+
 
 
 /* GET subjects notes page. */

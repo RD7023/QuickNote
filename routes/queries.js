@@ -80,7 +80,7 @@ const createUserSubject =(req,res) =>{
   const { inputSubject } =req.body;
   pool.query('INSERT INTO notes(author,lesson) VALUES($1,$2)',[username,inputSubject],function (error,results) {
     if (error) {
-
+      console.log(error);
     }
     else {
       res.redirect('/');
@@ -93,7 +93,7 @@ const getUserSubjects = (req,res) => {
   const { username } = req.session;
   pool.query('SELECT DISTINCT lesson FROM notes WHERE author=$1',[username],function (error,results) {
     if (error) {
-
+      console.log(error);
     }
     else {
       for (var i = 0; i < results.rows.length; i++) {
@@ -110,7 +110,7 @@ const getUserSubjectNotes = (req,res) => {
   const subject = req.params.subjId;
   pool.query('SELECT DISTINCT title FROM notes WHERE author=$1 AND lesson=$2 AND title IS NOT NULL',[username,subject],function (error,results) {
     if (error) {
-
+      console.log(error);
     }
     else {
       for (var i = 0; i < results.rows.length; i++) {
@@ -130,7 +130,7 @@ const createUserSubjectNotes = (req,res) => {
 
   pool.query('INSERT INTO notes(author,lesson,title) VALUES($1,$2,$3)',[username,subject,inputNoteTitle],function (error,results) {
     if (error) {
-
+      console.log(error);
     } else {
       res.redirect('/'+subject);
     }
@@ -145,7 +145,7 @@ const getUserNote = (req,res) => {
   pool.query('SELECT text,photo FROM notes WHERE author=$1 AND lesson=$2 AND title=$3 ',[username,subject,title],function (error,results) {
 
     if (error) {
-
+      console.log(error);
     } else {
 
       if (results.rows[0].text||results.rows[0].photo) {
